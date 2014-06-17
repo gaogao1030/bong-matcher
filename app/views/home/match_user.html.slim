@@ -1,0 +1,17 @@
+.left-block
+	| 头像位置
+	br
+	= current_user.name
+	br
+	= current_user.gender
+.middle-block
+	.yellow
+	 = @match_user.score
+	.message
+	 = @message
+.right-block
+	| 头像位置
+	br
+	= @match_user.matcher.name	
+	br
+	= @match_user.matcher.gender	

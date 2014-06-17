@@ -1,0 +1,40 @@
+h1
+ |user_info:
+.field
+ a href=(new_user_path)
+  |hello world
+.field
+ a href=(user_path) data-method="delete"
+  |leave world
+.field
+ a href=(match_path) 
+  |match world
+- unless current_user.nil?
+	.filed
+		| name:
+	 	= current_user.name
+	.filed
+		| gender:
+		= current_user.gender
+	.filed
+		| birthday:
+		= current_user.brithday
+	.filed
+		| weight:
+		= current_user.weight
+	.filed
+		| height:
+		= current_user.height
+	.filed
+		| sleeptime
+		= current_user.targetsleeptime
+	.filed
+		| targetCalorie
+		= current_user.targetCalorie
+h1
+ |sleep_info
+- unless current_user.nil?
+ .field
+  | sleeptime:
+  = current_user.get_sleep_time
+
