@@ -1,17 +1,23 @@
-.left-block
-	| 头像位置
-	br
-	= current_user.name
-	br
-	= current_user.gender
-.middle-block
-	.yellow
-	 = @match_user.score
-	.message
-	 = @message
-.right-block
-	| 头像位置
-	br
-	= @match_user.matcher.name	
-	br
-	= @match_user.matcher.gender	
+.containner
+ .left-block
+   = image_tag(current_user.avatar_url)	
+   .name
+    | 昵称:
+    = current_user.name
+   .gender
+    | 性别:
+    = current_user.gender
+ .middle-block
+  .yellow
+   = @match_user.score
+  .message
+   = @message
+ .right-block
+   .avatar
+    = image_tag(@match_user.matcher.avatar_url)	
+   .name
+     |昵称:
+     = @match_user.matcher.name	
+   .gender
+     |性别:
+     = @match_user.matcher.gender	

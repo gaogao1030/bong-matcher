@@ -1,26 +1,57 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import "bourbon";
+$radius: 10px;
 
-.left-block {
-	width: 40%;
-	display: inline-block;
+img {
+ @include border-top-radius($radius);
+ @include border-bottom-radius($radius);
+ @include border-left-radius($radius);
+ @include border-right-radius($radius);	
+ width:90px;
+ height:90px;
 }
-.middle-block {
-	width: 30%;
-	left: 40%;
-	display: inline-block;
-  .yellow {
-  	color:green;
-		font-size:38px;
-  }
-	.message {
-		margin-left:-15px;
-	}
+
+.containner {
+	width:80%;
+  margin:0 auto;
+   .button {
+		@include button;
+		margin: 100px 0 0 40%;
+	 }
+
+   .left-block {
+   	width: 30%;
+   	display: inline-block;
+		float:left;
+		text-align:center;
+    }
+
+   .middle-block {
+   	width: 40%;
+		margin:0 auto;
+    margin-top:50px;
+   	display: inline-block;
+		text-align:center;
+     .yellow {
+     	color:green;
+   		font-size:38px;
+     }
+   	.message {
+   		margin-left:-1$radius;
+   	}
+   }
+
+   .right-block { 
+		float:right;
+   	width: 30%;
+		margin-right:0px;
+   	display: inline-block;
+		text-align:center;
+   }
+
 }
-.right-block { 
-	width: 30%;
-	left: 70%;
-	display: inline-block;
-}
+
+
 

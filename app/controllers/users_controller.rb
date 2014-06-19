@@ -17,6 +17,9 @@ class UsersController < ApplicationController
 		user_info = JSON.parse(user_info)
 		user_info = user_info.merge(json)
 		user = push_user_info_to_database(user_info)
+		avatar_base64 = RestClient.get "http://open-test.bong.cn/1/userInfo/avatar/#{json["uid"]}?access_token=#{json["access_token"]}"
+		avatar_base64 = JSON.parse(avatar_base64)
+		user.update_avatar(avatar_base64["value"])
 		login_as(user)
 		last_day = Time.now - 10.day
 		last_day = last_day.strftime("%Y%m%d")

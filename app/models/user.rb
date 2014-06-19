@@ -13,11 +13,25 @@
 #  uid             :integer
 #  created_at      :datetime
 #  updated_at      :datetime
+#  avatar          :string(255)
+#
+# Indexes
+#
+#  index_users_on_uid  (uid)
 #
 
 class User < ActiveRecord::Base
 	has_many :bongday_sleeps
 	has_many :match_users, :foreign_key => "origin_id"
+	mount_uploader :avatar, AvatarUploader
+
+	def update_avatar(avatar_base64)
+		tmp = Tempfile.new("fileuplpoad")	
+		tmp.binmode
+		tmp.write(Base64.decode64(avatar_base64))
+		upload_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tmp, :filename => 'avatar.jpg',:original_filename => "avatar.jpg")
+		self.update_attributes(:avatar => upload_file)
+	end
 
 	def match_all_user
 		arr=[]

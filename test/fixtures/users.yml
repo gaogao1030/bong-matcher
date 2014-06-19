@@ -13,6 +13,11 @@
 #  uid             :integer
 #  created_at      :datetime
 #  updated_at      :datetime
+#  avatar          :string(255)
+#
+# Indexes
+#
+#  index_users_on_uid  (uid)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
