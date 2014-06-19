@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
 		match_user.each do |user|
 			result = self.bong_matcher(user)
 			result = 100 if result > 100 
+			result = 0 if result < 0 
 			record(self,user,result)
 		end
 	end

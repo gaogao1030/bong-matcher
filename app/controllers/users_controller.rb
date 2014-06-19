@@ -35,7 +35,8 @@ protected
 	end
 
 	def push_bongdaysleep_to_database(sleep)
-		bongday_sleep = get_bongdaysleep
+		last_sleep_data = get_last_sleep_data_from_bong(sleep)
+		bongday_sleep = get_bongdaysleep(last_sleep_data)
 		if bongday_sleep.empty?
 			bongday_sleep =	BongdaySleep.new 
 			last_sleep_data = get_last_sleep_data_from_bong(sleep)
@@ -70,8 +71,10 @@ protected
 		end
 	end
 	
-	def get_bongdaysleep
-		sleep = current_user.bongday_sleeps.where("time_end >= :now",{now:Time.now - 1.day })
+	def get_bongdaysleep(last_sleep_data)
+		time_begin 			= last_sleep_data["blockList"][0]["startTime"].to_datetime
+		time_end 				= last_sleep_data["blockList"][0]["endTime"].to_datetime
+		sleep = current_user.bongday_sleeps.where(:time_begin => time_begin,:time_end => time_end)
 		sleep
 	end
 

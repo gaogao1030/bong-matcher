@@ -3,10 +3,13 @@ class HomeController < ApplicationController
 	end
 
 	def match_user
-		redirect_to root_path if current_user.nil?
-		current_user.match_all_user
-		@match_user = current_user.match_users.order(:score).first
-		@message = get_message(@match_user.score)	
+		if current_user.nil?
+			redirect_to new_user_path 
+		else
+			current_user.match_all_user
+			@match_user = current_user.match_users.order("score DESC").first
+			@message = get_message(@match_user.score)	
+		end
 	end
 
 protected
