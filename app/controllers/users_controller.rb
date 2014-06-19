@@ -1,7 +1,7 @@
 require 'rest_client'
 class UsersController < ApplicationController
 	def new
-		redirect_to "http://open-test.bong.cn/oauth/authorize?client_id=1401421769806&redirect_uri=http://693b8596.ngrok.com/user/callback&response_type=code"
+		redirect_to "http://open-test.bong.cn/oauth/authorize?client_id=1401421769806&redirect_uri=http://haol.org:3000/user/callback&response_type=code"
 	end
 
 	def destroy
@@ -11,34 +11,42 @@ class UsersController < ApplicationController
 
 	def callback
 		code = params[:code]
-		result = RestClient.get "http://open-test.bong.cn/oauth/token?client_id=1401421769806&grant_type=authorization_code&client_secret=706f39dd0a864ce6955925490075a120&redirect_uri=http://693b8596.ngrok.com/user/callback&code=#{code}"
+		result = RestClient.get "http://open-test.bong.cn/oauth/token?client_id=1401421769806&grant_type=authorization_code&client_secret=706f39dd0a864ce6955925490075a120&redirect_uri=http://haol.org:3000/user/callback&code=#{code}"
 		json = JSON.parse(result)
 		user_info = RestClient.get "http://open-test.bong.cn/1/userInfo/#{json["uid"]}?access_token=#{json["access_token"]}"
 		user_info = JSON.parse(user_info)
 		user_info = user_info.merge(json)
 		user = push_user_info_to_database(user_info)
 		login_as(user)
-		last_day = Time.now - 1.day
+		last_day = Time.now - 10.day
 		last_day = last_day.strftime("%Y%m%d")
-		bongdaysleep = RestClient.get "http://open-test.bong.cn/1/sleep/blocks/#{last_day}?uid=#{json["uid"]}&access_token=#{json["access_token"]}"
+		bongdaysleep = RestClient.get "http://open-test.bong.cn/1/sleep/blocks/#{last_day}/10?uid=#{json["uid"]}&access_token=#{json["access_token"]}"
 		bongdaysleep = JSON.parse(bongdaysleep)
 		push_bongdaysleep_to_database(bongdaysleep) unless bongdaysleep["value"].empty?
 		redirect_to root_path
 	end
 
 protected
+
+	def get_last_sleep_data_from_bong(sleep)
+		sleep["value"].reverse_each do |s|
+			return s unless s["blockList"].empty?
+		end
+	end
+
 	def push_bongdaysleep_to_database(sleep)
 		bongday_sleep = get_bongdaysleep
 		if bongday_sleep.empty?
 			bongday_sleep =	BongdaySleep.new 
-			bongday_sleep.time_begin 			= sleep["value"][0]["startTime"].to_datetime
-			bongday_sleep.time_end 				= sleep["value"][0]["endTime"].to_datetime
-			bongday_sleep.bong_type				= sleep["value"][0]["type"]
-			bongday_sleep.dsnum			 			= sleep["value"][0]["dsNum"]
-			bongday_sleep.lsnum			 			= sleep["value"][0]["lsNum"]
-			bongday_sleep.wakenum		 			= sleep["value"][0]["wakeNum"]
-			bongday_sleep.waketimes 			= sleep["value"][0]["wakeTimes"]
-			bongday_sleep.score			 			= sleep["value"][0]["score"]
+			last_sleep_data = get_last_sleep_data_from_bong(sleep)
+			bongday_sleep.time_begin 			= last_sleep_data["blockList"][0]["startTime"].to_datetime
+			bongday_sleep.time_end 				= last_sleep_data["blockList"][0]["endTime"].to_datetime
+			bongday_sleep.bong_type				= last_sleep_data["blockList"][0]["type"]
+			bongday_sleep.dsnum			 			= last_sleep_data["blockList"][0]["dsNum"]
+			bongday_sleep.lsnum			 			= last_sleep_data["blockList"][0]["lsNum"]
+			bongday_sleep.wakenum		 			= last_sleep_data["blockList"][0]["wakeNum"]
+			bongday_sleep.waketimes 			= last_sleep_data["blockList"][0]["wakeTimes"]
+			bongday_sleep.score			 			= last_sleep_data["blockList"][0]["score"]
 			bongday_sleep.user_id					= current_user.id
 			if bongday_sleep.save
 				bongday_sleep

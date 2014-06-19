@@ -130,6 +130,8 @@ class User < ActiveRecord::Base
 				right_unrepeat_time = tuser.lastday_sleep_info.time_end - self.lastday_sleep_info.time_end
 				return [left_unrepeat_time,right_unrepeat_time].max
 			end 
+		 else
+	    	(self.lastday_sleep_info.time_begin - tuser.lastday_sleep_info.time_begin).abs
 		end
 	end
 

@@ -33,7 +33,7 @@ h1
 		= current_user.targetCalorie
 h1
  |sleep_info
-- unless current_user.nil?
+- unless current_user.nil? or current_user.lastday_sleep_info.nil?
  .field
   | sleeptime:
   = current_user.get_sleep_time

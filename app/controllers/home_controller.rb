@@ -23,7 +23,7 @@ protected
 		if score > 70 and score < 80
 			return "千里回眸，就是TA!"
 		end
-		if score >80 and score < 100
+		if score >80 and score <= 100
 			return "真爱!在一起!"
 		end
 	end
